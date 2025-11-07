@@ -83,6 +83,7 @@ useEffect(() => {
     const handler = () => loadProposals();
     contract.on("ProposalCreated", handler);
     return () => contract.removeListener("ProposalCreated", handler);
+     }, [contractAddress, hasMM]);
     
 
       return (
