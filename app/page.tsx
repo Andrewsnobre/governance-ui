@@ -78,16 +78,16 @@ export default function Home() {
   }
 useEffect(() => {
     loadProposals();
-    if(!contract) return;
+  
+    if (!contract) return;
     const handler = () => loadProposals();
     contract.on("ProposalCreated", handler);
-    return () => {
-      contract.off("ProposalCreated", handler);
-    };
+    return () => contract.removeListener("ProposalCreated", handler);
+    
 
       return (
     <div style={{ maxWidth: 760, margin: "40px auto", padding: 16, fontFamily: "ui-sans-serif, system-ui" }}>
-      <h1>Governance Proposals 🗳️</h1>
+      <h1>Governance Proposals /h1>
 
       <div style={{ marginBottom: 16 }}>
         {account ? (
