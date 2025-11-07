@@ -85,6 +85,55 @@ useEffect(() => {
       contract.off("ProposalCreated", handler);
     };
 
+      return (
+    <div style={{ maxWidth: 760, margin: "40px auto", padding: 16, fontFamily: "ui-sans-serif, system-ui" }}>
+      <h1>Governance Proposals 🗳️</h1>
+
+      <div style={{ marginBottom: 16 }}>
+        {account ? (
+          <span>Connected: {account.slice(0, 6)}…{account.slice(-4)}</span>
+        ) : (
+          <button onClick={connect}>Connect MetaMask</button>
+        )}
+      </div>
+
+      <form onSubmit={onSubmit} style={{ display: "grid", gap: 8, marginBottom: 24 }}>
+        <input
+          placeholder="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+        />
+        <textarea
+          placeholder="Description"
+          rows={4}
+          value={desc}
+          onChange={(e) => setDesc(e.target.value)}
+          required
+        />
+        <button type="submit" disabled={!account || busy}>
+          {busy ? "Submitting..." : "Create Proposal"}
+        </button>
+      </form>
+
+      <div style={{ display: "grid", gap: 12 }}>
+        <button onClick={loadProposals}>Refresh List</button>
+        {proposals.length === 0 && <p>No proposals yet.</p>}
+        {proposals.map((p) => (
+          <div key={p.id.toString()} style={{ border: "1px solid #ddd", borderRadius: 8, padding: 12 }}>
+            <div style={{ fontWeight: 600 }}>{p.title}</div>
+            <div style={{ whiteSpace: "pre-wrap", marginTop: 4 }}>{p.description}</div>
+            <div style={{ fontSize: 12, color: "#666", marginTop: 6 }}>
+              by {p.author.slice(0, 6)}…{p.author.slice(-4)} ·{" "}
+              {new Date(Number(p.createdAt) * 1000).toLocaleString()}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 
 
 
