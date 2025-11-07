@@ -77,14 +77,30 @@ export default function Home() {
 
   }
 useEffect(() => {
-    loadProposals();
-  
-    if (!contract) return;
-    const handler = () => loadProposals();
-    contract.on("ProposalCreated", handler);
-    return () => contract.removeListener("ProposalCreated", handler);
-     }, [contractAddress, hasMM]);
-    
+  if (!contract) return;
+
+  let mounted = true;
+
+  const handler = () => {
+    if (mounted) loadProposals();
+  };
+
+  // carrega na primeira vez
+  loadProposals();
+
+  // assina o evento
+  contract.on("ProposalCreated", handler);
+
+  // cleanup: não retorne o Contract!
+  return () => {
+    mounted = false;
+    try {
+      contract.off("ProposalCreated", handler); // ou removeListener
+    } catch (e) {
+      // ignore
+    }
+  };
+}, [contract]);
 
       return (
     <div style={{ maxWidth: 760, margin: "40px auto", padding: 16, fontFamily: "ui-sans-serif, system-ui" }}>
@@ -98,7 +114,7 @@ useEffect(() => {
         )}
       </div>
 
-      <form onSubmit={onSubmit} style={{ display: "grid", gap: 8, marginBottom: 24 }}>
+      <form onSubmit={onSubmite} style={{ display: "grid", gap: 8, marginBottom: 24 }}>
         <input
           placeholder="Title"
           value={title}
@@ -135,5 +151,5 @@ useEffect(() => {
   );
 }
 
-}
+
 
